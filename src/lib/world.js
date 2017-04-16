@@ -3,10 +3,10 @@ import Entity from './entity';
 
 const { Map, Set, WeakMap } = global;
 
-export default class World {
+const components = new Map();
+const entities = new Set();
 
-    entities = new Set();
-    components = new Map();
+export default class World {
 
     addEntity (entity) {
 
@@ -14,7 +14,7 @@ export default class World {
             throw new TypeError('All entities must be an instance of Entity')
         }
 
-        this.entities.add(entity);
+        entities.add(entity);
 
         return entity;
     }
@@ -25,7 +25,7 @@ export default class World {
             throw new TypeError('All entities must be an instance of Entity')
         }
 
-        this.entities.delete(entity);
+        entities.delete(entity);
 
         return entity;
     }
@@ -36,8 +36,17 @@ export default class World {
             throw new TypeError('Components must inherit from the Component class')
         }
 
-        this.components.set(type, new WeakMap());
+        components.set(type, new WeakMap());
 
         return type;
+    }
+
+    getComponentsOf (type) {
+
+        if (type.__proto__ !== Component) {
+            throw new TypeError('Components must inherit from the Component class')
+        }
+
+        return components.get(type);
     }
 }
