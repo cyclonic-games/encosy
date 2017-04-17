@@ -1,3 +1,5 @@
+import { worlds } from './world';
+
 export default class System {
 
     constructor (mask = [ ], action = (() => null)) {
@@ -6,9 +8,11 @@ export default class System {
     }
 
     run (world, entity) {
-        const { components } = world;
+        const entityFitsMask = this.mask.reduce((fits, type) => {
+            return fits && worlds.get(world).get('components').get(type).has(entity)
+        }, true);
 
-        if (this.mask.reduce((prev, next) => prev && components.get(next).has(entity), true)) {
+        if (entityFitsMask) {
             this.action(world, entity);
         }
     }

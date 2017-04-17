@@ -28,16 +28,11 @@ The API is very lightweight and simple to use
 
 ### `World`
 The `World` class is the interface that you use to describe all current
-entities and their components. It has the following methods:
+entities and their components. It has two getters that allow you to access the
+current components and entities.
 
-- `addEntity(Entity)`
- - Adds an instance of Entity to the entities `Set`
-- `removeEntity(Entity)`
- - Removes an instance of Entity from the entities `Set`
-- `registerComponent(ComponentType)`
- - Adds a component class to the components `Map` with a `WeakMap` for a value
-- `getComponentsOf(ComponentType)`
- - Retrieves the component type's `WeakMap`
+- `components`
+- `entities`
 
 ```JavaScript
 import { World } from '@eclipse-games/encosy';
@@ -45,37 +40,73 @@ import { World } from '@eclipse-games/encosy';
 const world = new World();
 ```
 
+--------------------------------------------------------------------------------
+
 ### `Component`
-The `Component` class is empty; it is used to ensure a consistent API.
+The `Component` class is used to define the data model for a component. The
+available types are as follows:
+
+- `any`
+- `array`
+- `boolean`
+- `map`
+- `number`
+- `object`
+- `set`
+- `string`
+- `symbol`
+
 ```JavaScript
 import { Component } from '@eclipse-games/encosy';
 
-export default class MyComponent extends Component {
-    // ...
-}
+const FooComponent = new Component({
+    foo: Component.types.string,
+    bar: Component.types.number
+});
 
-world.registerComponent(MyComponent);
+export default FooComponent;
 ```
+
+Once you've defined a component type, you must register it with the world. This
+is as simple as the following:
+
+```JavaScript
+FooComponent.register(world);
+```
+
+--------------------------------------------------------------------------------
 
 ### `Entity`
-The `Entity` class is empty; it is used to ensure a consistent API. It is also
-used as the keys of a component's type's `WeakMap`. This means that whenever an
-entity is deleted, the `WeakMap` will allow it to be garbage collected,
-preventing a possible memory leak.
+The `Entity` class is a factory that accepts a dictionary of an accessor string,
+and a component class, It's what creates the unique ID that is the entity, and
+creates a relationship between it and components.
+
 ```JavaScript
 import { Entity } from '@eclipse-games/encosy';
+import FooComponent from 'somewhere';
 
-export default {
+const FooEntity = new Entity({
+    baz: FooComponent
+});
 
-    create (world, { myComponent }) {
-        const entity = world.addEntity(new Entity());
-
-        world.getComponentsOf(MyComponent).set(entity, new MyComponent(myComponent));
-
-        return entity;
-    }
-}
+export default FooEntity;
 ```
+
+Once you've created an entity type and its require component types, you can
+create, and wire up and actual entity:
+
+```JavaScript
+import FooEntity from 'somewhere';
+
+FooEntity.create(world, {
+    baz: {
+        foo: 'hello',
+        bar: 1
+    }
+});
+```
+
+--------------------------------------------------------------------------------
 
 ### `System`
 The `System` class is used to define the actual logic that brings the components
@@ -83,12 +114,23 @@ of an entity together. The first argument is an iterable containing the required
 components that an entity must have in order for the system to act upon it. The
 second argument is a callback that is the actual system's code. It should accept
 the world and a single entity.
+
 ```JavaScript
 import { System } from '@eclipse-games/encosy';
 
-export default new System([ MyComponent ], (world, entity) => {
-    const myComponent = world.getComponentsOf(MyComponent).get(entity);
+const FooSystem = new System([ MyComponent ], (world, entity) => {
+    // access components via world.components
+});
 
-    // ...
-})
+export default FooSystem;
+```
+
+Once a system has been defined, you can run it via its `run` method:
+
+```JavaScript
+import FooSystem from 'somewhere';
+
+// access entities via world.entities
+
+FooSystem.run(world, entity);
 ```

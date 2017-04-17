@@ -5,7 +5,8 @@ module.exports = {
 
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'encosy.js'
+        filename: 'encosy.js',
+        libraryTarget: 'commonjs2'
     },
 
     module: {

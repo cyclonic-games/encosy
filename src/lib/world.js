@@ -1,52 +1,25 @@
 import Component from './component';
 import Entity from './entity';
 
-const { Map, Set, WeakMap } = global;
+const { Map, Set, WeakMap, WeakSet } = global;
 
-const components = new Map();
-const entities = new Set();
+export const worlds = new WeakMap();
 
 export default class World {
 
-    addEntity (entity) {
-
-        if (!(entity instanceof Entity)) {
-            throw new TypeError('All entities must be an instance of Entity')
-        }
-
-        entities.add(entity);
-
-        return entity;
+    get entities () {
+        return new WeakSet(worlds.get(this).get('entities'));
     }
 
-    removeEntity (entity) {
-
-        if (!(entity instanceof Entity)) {
-            throw new TypeError('All entities must be an instance of Entity')
-        }
-
-        entities.delete(entity);
-
-        return entity;
+    get components () {
+        return new WeakMap(worlds.get(this).get('components'));
     }
 
-    registerComponent (type) {
-
-        if (type.__proto__ !== Component) {
-            throw new TypeError('Components must inherit from the Component class')
-        }
-
-        components.set(type, new WeakMap());
-
-        return type;
-    }
-
-    getComponentsOf (type) {
-
-        if (type.__proto__ !== Component) {
-            throw new TypeError('Components must inherit from the Component class')
-        }
-
-        return components.get(type);
+    constructor () {
+        worlds.set(this, new Map([
+            [ 'serial', 0 ],
+            [ 'entities', new Set() ],
+            [ 'components', new Map() ]
+        ]));
     }
 }
