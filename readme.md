@@ -34,10 +34,12 @@ new World()
 
 The `World` class is the interface that you use to describe all current
 entities and their components. It has two getters that allow you to access the
-current components and entities.
+current components and entities. 
 
-- `components`
-- `entities`
+*(these getters return new objects that contain entities/components. If you add or remove items from these new objects, they will not be reflected in the world)*
+
+- `components` returns a `Map`
+- `entities` returns a `Set`
 
 *Example*
 
