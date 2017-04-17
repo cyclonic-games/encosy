@@ -94,7 +94,7 @@ The `Entity` class is a factory that accepts a dictionary of an accessor string,
 and a component class, It's what creates the unique ID that is the entity, and
 creates a relationship between it and components.
 
-**Example** *(~/entities/character.js)
+**Example** *(~/entities/character.js)*
 
 ```JavaScript
 import { Entity } from '@eclipse-games/encosy';
@@ -134,7 +134,7 @@ components that an entity must have in order for the system to act upon it. The
 second argument is a callback that is the actual system's code. It should accept
 the world and a single entity.
 
-**Example** *(~/systems/render.js)
+**Example** *(~/systems/render.js)*
 
 ```JavaScript
 import { System } from '@eclipse-games/encosy';
