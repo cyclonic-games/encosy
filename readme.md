@@ -144,9 +144,8 @@ import position from '~/components/position';
 import sprite from '~/components/sprite';
 
 export default new System([ position, sprite ], (world, entity) => {
-    const { components } = world;
-    const { x, y } = components.get(position).get(entity);
-    const { data } = components.get(sprite).get(entity);
+    const { x, y } = position.of(world, entity);
+    const { data } = sprite.of(world, entity);
     
     // render character using data from components...
 });
