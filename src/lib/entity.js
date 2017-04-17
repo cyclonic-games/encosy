@@ -13,8 +13,8 @@ export default class Entity {
         const entity = new Number(serial);
 
         for (const [ accessor, type ] of Object.entries(this.components)) {
-            const componentMap = worlds.get(world).get('components').get(type);
             const component = type.create(world, data[ accessor ]);
+            const componentMap = worlds.get(world).get('components').get(type);
 
             componentMap.set(entity, component);
         }
