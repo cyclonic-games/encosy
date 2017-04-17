@@ -2,8 +2,6 @@ import { worlds } from './world';
 
 const { Array, Map/*, Object*/, Set, WeakMap, WeakSet } = global;
 
-const components = new WeakMap();
-
 export default class Component {
 
     static types = Object.freeze({
@@ -24,12 +22,12 @@ export default class Component {
         components.set(this, new WeakSet());
     }
 
-    register (world) {
-        worlds.get(world).get('components').set(this, new WeakMap());
-    }
-
-    create (world, data) {
+    create (world, entity, data) {
         const validated = { };
+        
+        if (!(worlds.get(world).get('components').has(this))) {
+            worlds.get(world).get('components').set(this, new WeakMap());
+        }
 
         for (const [ key, value ] of Object.entries(data)) {
 
@@ -41,7 +39,7 @@ export default class Component {
             }
         }
 
-        components.get(this).add(validated);
+        worlds.get(world).get('components').get(this).set(entity, validated);
 
         return validated;
     }
