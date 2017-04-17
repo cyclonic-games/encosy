@@ -22,6 +22,10 @@ export default class Component {
         components.set(this, new WeakSet());
     }
 
+    of (world, entity) {
+        return worlds.get(world).get('components').get(this).get(entity);
+    }
+
     create (world, entity, data) {
         const validated = { };
         
