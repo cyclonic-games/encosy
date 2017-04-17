@@ -27,6 +27,11 @@ entity contains all of the required components, and then acts accordingly.
 The API is very lightweight and simple to use
 
 ### `World`
+
+```JavaScript
+new World()
+```
+
 The `World` class is the interface that you use to describe all current
 entities and their components. It has two getters that allow you to access the
 current components and entities.
@@ -34,15 +39,25 @@ current components and entities.
 - `components`
 - `entities`
 
+*Example*
+
 ```JavaScript
 import { World } from '@eclipse-games/encosy';
 
 const world = new World();
+const { components, entities } = world;
+
+// do stuff with entities and components...
 ```
 
 --------------------------------------------------------------------------------
 
 ### `Component`
+
+```JavaScript
+new Component(Object<String, Function>)
+```
+
 The `Component` class is used to define the data model for a component. The
 available types are as follows:
 
@@ -56,81 +71,89 @@ available types are as follows:
 - `string`
 - `symbol`
 
+**Example** *(~/components/position.js)*
+
 ```JavaScript
 import { Component } from '@eclipse-games/encosy';
 
-const FooComponent = new Component({
-    foo: Component.types.string,
-    bar: Component.types.number
+export default new Component({
+    x: Component.types.number,
+    y: Component.types.number
 });
-
-export default FooComponent;
-```
-
-Once you've defined a component type, you must register it with the world. This
-is as simple as the following:
-
-```JavaScript
-FooComponent.register(world);
 ```
 
 --------------------------------------------------------------------------------
 
 ### `Entity`
+
+```JavaScript
+new Entity(Object<String, Component>)
+```
+
 The `Entity` class is a factory that accepts a dictionary of an accessor string,
 and a component class, It's what creates the unique ID that is the entity, and
 creates a relationship between it and components.
 
+**Example** *(~/entities/character.js)
+
 ```JavaScript
 import { Entity } from '@eclipse-games/encosy';
-import FooComponent from 'somewhere';
+import position from '~/components/position';
+import sprite from '~/components/sprite';
 
-const FooEntity = new Entity({
-    baz: FooComponent
+export default new Entity({
+    position,
+    sprite
 });
-
-export default FooEntity;
 ```
-
-Once you've created an entity type and its require component types, you can
-create, and wire up and actual entity:
+Then, to create a character, you would do:
 
 ```JavaScript
-import FooEntity from 'somewhere';
+import character from '~/entities/character';
 
-FooEntity.create(world, {
-    baz: {
-        foo: 'hello',
-        bar: 1
-    }
+character.create({
+    position: {
+        x: 0,
+        y: 0
+    },
+    sprite: { ... }
 });
 ```
 
 --------------------------------------------------------------------------------
 
 ### `System`
+
+```JavaScript
+new System(Array<Component>, Function)
+```
+
 The `System` class is used to define the actual logic that brings the components
 of an entity together. The first argument is an iterable containing the required
 components that an entity must have in order for the system to act upon it. The
 second argument is a callback that is the actual system's code. It should accept
 the world and a single entity.
 
+**Example** *(~/systems/render.js)
+
 ```JavaScript
 import { System } from '@eclipse-games/encosy';
+import position from '~/components/position';
+import sprite from '~/components/sprite';
 
-const FooSystem = new System([ MyComponent ], (world, entity) => {
-    // access components via world.components
+export default new System([ position, sprite ], (world, entity) => {
+    const { components } = world;
+    const { x, y } = components.get(position).get(entity);
+    const { data } = components.get(sprite).get(entity);
+    
+    // render character using data from components...
 });
-
-export default FooSystem;
 ```
 
-Once a system has been defined, you can run it via its `run` method:
+Then, to run the render system, you would call its `run` method:
 
 ```JavaScript
-import FooSystem from 'somewhere';
+import render from '~/systems/render';
 
-// access entities via world.entities
-
-FooSystem.run(world, entity);
+render.run(world, entity);
 ```
