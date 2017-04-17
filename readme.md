@@ -38,8 +38,8 @@ current components and entities.
 
 *(these getters return new objects that contain entities/components. If you add or remove items from these new objects, they will not be reflected in the world)*
 
-- `components` returns a `Map`
-- `entities` returns a `Set`
+- `components` returns a `WeakMap`
+- `entities` returns a `WeakSet`
 
 *Example*
 
