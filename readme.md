@@ -28,7 +28,7 @@ The API is very lightweight and simple to use
 
 ### `Component`
 
-```JavaScript
+```javascript
 new Component(Object<String, Function>)
 ```
 
@@ -47,7 +47,7 @@ available types are as follows:
 
 **Example** *(~/components/position.js)*
 
-```JavaScript
+```javascript
 import { Component } from '@eclipse-games/encosy';
 
 export default new Component({
@@ -60,7 +60,7 @@ export default new Component({
 
 ### `Entity`
 
-```JavaScript
+```javascript
 new Entity(Object<String, Component>)
 ```
 
@@ -70,7 +70,7 @@ creates a relationship between it and components.
 
 **Example** *(~/entities/character.js)*
 
-```JavaScript
+```javascript
 import { Entity } from '@eclipse-games/encosy';
 import position from '~/components/position';
 import sprite from '~/components/sprite';
@@ -82,10 +82,10 @@ export default new Entity({
 ```
 Then, to create a character, you would do:
 
-```JavaScript
+```javascript
 import character from '~/entities/character';
 
-character.create({
+const char = character.create({
     position: {
         x: 0,
         y: 0
@@ -94,11 +94,19 @@ character.create({
 });
 ```
 
+If you'd like to then delete a character, which would then also allow its 
+components to be garbage collected (if you have no other strong references), 
+you would do:
+
+```javascript
+character.destroy(char)
+```
+
 --------------------------------------------------------------------------------
 
 ### `System`
 
-```JavaScript
+```javascript
 new System(Array<Component>, Function)
 ```
 
@@ -110,7 +118,7 @@ the world and a single entity.
 
 **Example** *(~/systems/render.js)*
 
-```JavaScript
+```javascript
 import { System } from '@eclipse-games/encosy';
 import position from '~/components/position';
 import sprite from '~/components/sprite';
@@ -125,7 +133,7 @@ export default new System([ position, sprite ], entity => {
 
 Then, to run the render system, you would call its `run` method:
 
-```JavaScript
+```javascript
 import character from '~/entities/character';
 import render from '~/systems/render';
 
