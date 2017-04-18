@@ -10,7 +10,7 @@ export default class Entity {
     }
 
     forEach (callback) {
-        store.get('entities').get(this).forEach(callback);
+        return store.get('entities').get(this).forEach(callback);
     }
 
     create (data) {
@@ -25,5 +25,9 @@ export default class Entity {
         store.get('entities').get(this).add(entity);
 
         return entity;
+    }
+    
+    destroy (entity) {
+        return store.get('entities').get(this).delete(entity);
     }
 }
