@@ -1,4 +1,4 @@
-import { worlds } from './world';
+import store from './store';
 
 const { Number/*, Object*/ } = global;
 
@@ -6,18 +6,23 @@ export default class Entity {
 
     constructor (components) {
         this.components = components;
+        store.get('entities').set(this, new Set());
     }
 
-    create (world, data) {
-        const serial = worlds.get(world).get('serial');
+    forEach (callback) {
+        store.get('entities').get(this).forEach(callback);
+    }
+
+    create (data) {
+        const serial = store.get('serial');
         const entity = new Number(serial);
 
         for (const [ accessor, type ] of Object.entries(this.components)) {
-            type.create(world, entity, data[ accessor ]);
+            type.create(entity, data[ accessor ]);
         }
 
-        worlds.get(world).set('serial', serial + 1);
-        worlds.get(world).get('entities').add(entity);
+        store.set('serial', serial + 1);
+        store.get('entities').get(this).add(entity);
 
         return entity;
     }

@@ -1,4 +1,4 @@
-import { worlds } from './world';
+import store from './store';
 
 const { Array, Map/*, Object*/, Set, WeakMap, WeakSet } = global;
 
@@ -18,20 +18,15 @@ export default class Component {
 
     constructor (model) {
         this.model = model;
-
-        components.set(this, new WeakSet());
+        store.get('components').set(this, new WeakMap());
     }
 
-    of (world, entity) {
-        return worlds.get(world).get('components').get(this).get(entity);
+    of (entity) {
+        return store.get('components').get(this).get(entity);
     }
 
-    create (world, entity, data) {
+    create (entity, data) {
         const validated = { };
-        
-        if (!(worlds.get(world).get('components').has(this))) {
-            worlds.get(world).get('components').set(this, new WeakMap());
-        }
 
         for (const [ key, value ] of Object.entries(data)) {
 
@@ -43,7 +38,7 @@ export default class Component {
             }
         }
 
-        worlds.get(world).get('components').get(this).set(entity, validated);
+        store.get('components').get(this).set(entity, validated);
 
         return validated;
     }

@@ -26,34 +26,6 @@ entity contains all of the required components, and then acts accordingly.
 ## Usage
 The API is very lightweight and simple to use
 
-### `World`
-
-```JavaScript
-new World()
-```
-
-The `World` class is the interface that you use to describe all current
-entities and their components. It has two getters that allow you to access the
-current components and entities. 
-
-*(these getters return new objects that contain entities/components. If you add or remove items from these new objects, they will not be reflected in the world)*
-
-- `components` returns a `WeakMap`
-- `entities` returns a `WeakSet`
-
-*Example*
-
-```JavaScript
-import { World } from '@eclipse-games/encosy';
-
-const world = new World();
-const { components, entities } = world;
-
-// do stuff with entities and components...
-```
-
---------------------------------------------------------------------------------
-
 ### `Component`
 
 ```JavaScript
@@ -143,10 +115,10 @@ import { System } from '@eclipse-games/encosy';
 import position from '~/components/position';
 import sprite from '~/components/sprite';
 
-export default new System([ position, sprite ], (world, entity) => {
-    const { x, y } = position.of(world, entity);
-    const { data } = sprite.of(world, entity);
-    
+export default new System([ position, sprite ], entity => {
+    const { x, y } = position.of(entity);
+    const { data } = sprite.of(entity);
+
     // render character using data from components...
 });
 ```
@@ -154,7 +126,8 @@ export default new System([ position, sprite ], (world, entity) => {
 Then, to run the render system, you would call its `run` method:
 
 ```JavaScript
+import character from '~/entities/character';
 import render from '~/systems/render';
 
-render.run(world, entity);
+character.forEach(char => render.run(char));
 ```

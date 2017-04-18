@@ -1,6 +1,6 @@
 {
   "name": "@eclipse-games/encosy",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Lightweight Entity/ Component/ System implementation in JavaScript",
   "main": "dist/encosy.js",
   "scripts": {

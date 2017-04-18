@@ -1,4 +1,4 @@
-import { worlds } from './world';
+import store from './store';
 
 export default class System {
 
@@ -7,13 +7,13 @@ export default class System {
         this.action = action;
     }
 
-    run (world, entity) {
+    run (entity) {
         const entityFitsMask = this.mask.reduce((fits, type) => {
-            return fits && worlds.get(world).get('components').get(type).has(entity)
+            return fits && store.get('components').get(type).has(entity);
         }, true);
 
         if (entityFitsMask) {
-            this.action(world, entity);
+            this.action(entity);
         }
     }
 }
