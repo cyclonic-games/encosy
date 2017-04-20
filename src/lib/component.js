@@ -13,7 +13,8 @@ export default class Component {
         object: o => typeof o === 'object',
         set: s => s instanceof Set,
         string: s => typeof s === 'string',
-        symbol: s => typeof s === 'symbol'
+        symbol: s => typeof s === 'symbol',
+        enum: e => v => v in e
     });
 
     constructor (model) {
