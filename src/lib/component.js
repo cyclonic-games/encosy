@@ -17,7 +17,7 @@ export default class Component {
         enum: e => v => v in e
     });
 
-    constructor (model) {
+    constructor (model = { }) {
         this.model = model;
         store.get('components').set(this, new WeakMap());
     }
@@ -26,7 +26,7 @@ export default class Component {
         return store.get('components').get(this).get(entity);
     }
 
-    create (entity, data) {
+    create (entity, data = { }) {
         const validated = { };
 
         for (const [ key, value ] of Object.entries(data)) {
