@@ -56,6 +56,16 @@ export default new Component({
 });
 ```
 
+If you need to dynamically add to a component's model, you can `extend` it:
+
+```javascript
+import position from '~/components/position';
+
+position.extend({
+    z: Component.types.number
+});
+```
+
 --------------------------------------------------------------------------------
 
 ### `Entity`
@@ -94,8 +104,19 @@ const char = character.create({
 });
 ```
 
-If you'd like to then delete a character, which would then also allow its 
-components to be garbage collected (if you have no other strong references), 
+If you need to dynamically add components to an entity, you can `extend` it:
+
+```javascript
+import character from '~/entities/character';
+import health from '~/components/health';
+
+character.extend({
+    health
+});
+```
+
+If you'd like to then delete a character, which would then also allow its
+components to be garbage collected (if you have no other strong references),
 you would do:
 
 ```javascript
@@ -111,7 +132,7 @@ new System(Array<Component>, Function)
 ```
 
 The `System` class is used to define the actual logic that brings the components
-of an entity together. The first argument is an iterable containing the required
+of an entity together. The first argument is an array containing the required
 components that an entity must have in order for the system to act upon it. The
 second argument is a callback that is the actual system's code. It should accept
 the world and a single entity.
@@ -138,4 +159,14 @@ import character from '~/entities/character';
 import render from '~/systems/render';
 
 character.forEach(char => render.run(char));
+```
+
+If you'd like to dynamically add more code to a system, you can `extend` it:
+
+```javascript
+import render from '~/systems/render';
+
+render.extend(entity => {
+    // do more to the entity
+});
 ```

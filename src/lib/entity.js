@@ -4,9 +4,13 @@ const { Number/*, Object*/ } = global;
 
 export default class Entity {
 
+    static get instances () {
+        return store.get('entities').keys();
+    }
+
     constructor (components = { }) {
         this.components = components;
-        
+
         store.get('entities').set(this, new Set());
     }
 
@@ -27,12 +31,12 @@ export default class Entity {
 
         return entity;
     }
-    
+
     destroy (entity) {
         return store.get('entities').get(this).delete(entity);
     }
-    
+
     extend (components) {
-        return Object.assign(this.components, components);
+        Object.assign(this.components, components);
     }
 }

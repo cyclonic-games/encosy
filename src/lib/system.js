@@ -2,9 +2,15 @@ import store from './store';
 
 export default class System {
 
+    static get instances () {
+        return store.get('systems');
+    }
+
     constructor (mask = [ ], action = (() => null)) {
         this.mask = mask;
-        this.action = action;
+        this.actions = [ action ];
+
+        store.get('systems').add(this);
     }
 
     run (entity) {
@@ -13,7 +19,11 @@ export default class System {
         }, true);
 
         if (entityFitsMask) {
-            this.action(entity);
+            this.actions.forEach(action => action(entity));
         }
+    }
+
+    extend (action) {
+        this.actions.push(action);
     }
 }
