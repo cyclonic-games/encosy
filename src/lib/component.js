@@ -11,7 +11,7 @@ export default class Component {
     static types = Object.freeze({
         any: () => true,
         array: a => Array.isArray(a),
-        boolean: b => typeof b === 'boolean',
+        boolean: b => typeof b === 'boolean' || b instanceof Boolean,
         map: m => m instanceof Map,
         number: n => typeof n === 'number' || n instanceof Number,
         object: o => typeof o === 'object',
@@ -23,7 +23,7 @@ export default class Component {
 
     constructor (model = { }) {
         this.model = model;
-        
+
         store.get('components').set(this, new WeakMap());
     }
 
@@ -32,21 +32,33 @@ export default class Component {
     }
 
     create (entity, data = { }) {
-        const validated = { };
 
-        for (const [ key, value ] of Object.entries(data)) {
+        if (typeof this.model === 'function') {
 
-            if (key in this.model && this.model[ key ](value)) {
-                validated[ key ] = value;
+            if (this.model(data)) {
+                store.get('components').get(this).set(entity, data);
+                return data;
             }
             else {
-                throw new TypeError(`Wrong type for property "${ key }"`);
+                throw new TypeError('Wrong type for component');
             }
         }
+        else {
+            const validated = { };
 
-        store.get('components').get(this).set(entity, validated);
+            for (const [ key, value ] of Object.entries(data)) {
 
-        return validated;
+                if (key in this.model && this.model[ key ](value)) {
+                    validated[ key ] = value;
+                }
+                else {
+                    throw new TypeError(`Wrong type for property "${ key }"`);
+                }
+            }
+
+            store.get('components').get(this).set(entity, validated);
+            return validated;
+        }
     }
 
     extend (model) {
