@@ -61,6 +61,10 @@ export default class Component {
         }
     }
 
+    update (entity, model) {
+        return Object.assign(store.get('components').get(this).get(entity), model);
+    }
+
     extend (model) {
         Object.assign(this.model, model);
     }

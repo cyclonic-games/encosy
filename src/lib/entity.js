@@ -32,10 +32,6 @@ export default class Entity {
         return entity;
     }
 
-    update (entity, properties) {
-        return Object.assign(store.get('entites').get(this).get(entity), properties);
-    }
-
     destroy (entity) {
         return store.get('entities').get(this).delete(entity);
     }
