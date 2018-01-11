@@ -1,6 +1,6 @@
 import store from './store';
 
-const { Array, Map/*, Object*/, Set, WeakMap, WeakSet } = global;
+const { Array, Map/*, Object*/, Proxy, Set, WeakMap, WeakSet } = global;
 
 export default class Component {
 
@@ -15,9 +15,12 @@ export default class Component {
         map: m => m instanceof Map,
         number: n => typeof n === 'number' || n instanceof Number,
         object: o => typeof o === 'object',
+        proxy: p => p instanceof Proxy,
         set: s => s instanceof Set,
         string: s => typeof s === 'string' || s instanceof String,
         symbol: s => typeof s === 'symbol',
+        weakmap: wm => wm instanceof WeakMap,
+        weakset: ws => ws instanceof WeakSet,
         enum: e => v => v in e
     });
 
