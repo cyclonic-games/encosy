@@ -41,9 +41,12 @@ available types are as follows:
 - `map`
 - `number`
 - `object`
+- `proxy`
 - `set`
 - `string`
 - `symbol`
+- `weakmap`
+- `weakset`
 
 **Example** *(~/components/position.js)*
 
@@ -56,7 +59,7 @@ export default new Component({
 });
 ```
 
-If you need to dynamically add to a component's model, you can `extend` it:
+If you need to dynamically add to a component's model, you may `extend` it:
 
 ```javascript
 import position from '~/components/position';
@@ -151,6 +154,10 @@ export default new System([ position, sprite ], entity => {
     // render character using data from components...
 });
 ```
+
+As you can see, to get a position of an entity, you would use the `of` method. 
+This works similarily by concept to reflection, though it's not totally the same 
+thing.
 
 Then, to run the render system, you would call its `run` method:
 
