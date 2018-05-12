@@ -1,6 +1,8 @@
-import store from './store';
+import Number from 'std/Number';
+import Object from 'std/Object';
+import Set from 'std/Set';
 
-const { Number/*, Object*/ } = global;
+import store from './store';
 
 export default class Entity {
 

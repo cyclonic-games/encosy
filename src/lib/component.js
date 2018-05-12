@@ -1,6 +1,14 @@
-import store from './store';
+import Array from 'std/Array';
+import Boolean from 'std/Boolean';
+import Map from 'std/Map';
+import Object from 'std/Object';
+import Proxy from 'std/Proxy';
+import Set from 'std/Set';
+import TypeError from 'std/TypeError';
+import WeakMap from 'std/WeakMap';
+import WeakSet from 'std/WeakSet';
 
-const { Array, Map/*, Object*/, Proxy, Set, WeakMap, WeakSet } = global;
+import store from './store';
 
 export default class Component {
 
@@ -26,7 +34,6 @@ export default class Component {
 
     constructor (model = { }) {
         this.model = model;
-
         store.get('components').set(this, new WeakMap());
     }
 
