@@ -10,7 +10,8 @@ export default class Entity {
         return store.get('entities').keys();
     }
 
-    constructor (components = { }) {
+    constructor (name, components = [ ]) {
+        this.kind = name;
         this.components = components;
 
         store.get('entities').set(this, new Set());
@@ -24,8 +25,12 @@ export default class Entity {
         const serial = store.get('serial');
         const entity = new Number(serial);
 
-        for (const [ accessor, type ] of Object.entries(this.components)) {
-            type.create(entity, data[ accessor ]);
+        for (const [ kind, payload ] of Object.entries(data)) {
+            const component = this.components.find(c => c.kind === kind);
+
+            if (component) {
+                component.create(entity, payload);
+            }
         }
 
         store.set('serial', serial + 1);
@@ -39,6 +44,6 @@ export default class Entity {
     }
 
     extend (components) {
-        Object.assign(this.components, components);
+        this.components.concat(components);
     }
 }

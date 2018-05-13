@@ -6,7 +6,8 @@ export default class System {
         return store.get('systems');
     }
 
-    constructor (mask = [ ], action = (() => null)) {
+    constructor (name, mask = [ ], action = (() => null)) {
+        this.kind = name;
         this.mask = mask;
         this.actions = [ action ];
 

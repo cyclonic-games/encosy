@@ -32,8 +32,10 @@ export default class Component {
         enum: e => v => v in e
     });
 
-    constructor (model = { }) {
+    constructor (name, model = { }) {
+        this.kind = name;
         this.model = model;
+
         store.get('components').set(this, new WeakMap());
     }
 
