@@ -1,9 +1,13 @@
 import Array from 'std/Array';
 import Boolean from 'std/Boolean';
+import Function from 'std/Function';
 import Map from 'std/Map';
+import Number from 'std/Number';
 import Object from 'std/Object';
 import Proxy from 'std/Proxy';
 import Set from 'std/Set';
+import String from 'std/String';
+import Symbol from 'std/Symbol';
 import TypeError from 'std/TypeError';
 import WeakMap from 'std/WeakMap';
 import WeakSet from 'std/WeakSet';
@@ -12,25 +16,9 @@ import store from './store';
 
 export default class Component {
 
-    static get instances () {
+    static get __instances__ () {
         return store.get('components').keys();
     }
-
-    static types = Object.freeze({
-        any: () => true,
-        array: a => Array.isArray(a),
-        boolean: b => typeof b === 'boolean' || b instanceof Boolean,
-        map: m => m instanceof Map,
-        number: n => typeof n === 'number' || n instanceof Number,
-        object: o => typeof o === 'object',
-        proxy: p => p instanceof Proxy,
-        set: s => s instanceof Set,
-        string: s => typeof s === 'string' || s instanceof String,
-        symbol: s => typeof s === 'symbol',
-        weakmap: wm => wm instanceof WeakMap,
-        weakset: ws => ws instanceof WeakSet,
-        enum: e => v => v in e
-    });
 
     constructor (name, model = { }) {
         this.kind = name;
@@ -43,12 +31,35 @@ export default class Component {
         return store.get('components').get(this).get(entity);
     }
 
+    validate (type, value) {
+        switch (type) {
+            case Array: return Array.isArray(value);
+            case Boolean: return typeof value === 'boolean' || value instanceof Boolean;
+            case Function: return typeof value === 'function' || value instanceof Function;
+            case Map: return value instanceof Map;
+            case Number: return typeof value === 'number' || value instanceof Number;
+            case Object: return typeof value === 'object' || value instanceof Object;
+            case Proxy: return value instanceof Proxy;
+            case Set: return value instanceof Set;
+            case String: return typeof value === 'string' || value instanceof String;
+            case Symbol: return typeof value === 'symbol';
+            case WeakMap: return value instanceof WeakMap;
+            case WeakSet: return value instanceof WeakSet;
+            default: return false;
+        }
+    }
+
     create (entity, data = { }) {
 
         if (typeof this.model === 'function') {
 
-            if (this.model(data)) {
-                store.get('components').get(this).set(entity, data);
+            if (this.validate(this.model, data)) try {
+                store.get('components').get(this).set(entity, new this.model(data));
+            }
+            catch {
+                store.get('components').get(this).set(entity, this.model(data));
+            }
+            finally {
                 return data;
             }
             else {
@@ -60,7 +71,7 @@ export default class Component {
 
             for (const [ key, value ] of Object.entries(data)) {
 
-                if (key in this.model && this.model[ key ](value)) {
+                if (key in this.model && this.validate(key, value)) {
                     validated[ key ] = value;
                 }
                 else {
@@ -69,6 +80,7 @@ export default class Component {
             }
 
             store.get('components').get(this).set(entity, validated);
+
             return validated;
         }
     }

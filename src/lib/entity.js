@@ -1,12 +1,13 @@
 import Number from 'std/Number';
 import Object from 'std/Object';
 import Set from 'std/Set';
+import Symbol from 'std/Symbol';
 
 import store from './store';
 
 export default class Entity {
 
-    static get instances () {
+    static get __instances__ () {
         return store.get('entities').keys();
     }
 
@@ -17,6 +18,19 @@ export default class Entity {
         store.get('entities').set(this, new Set());
     }
 
+    * [ Symbol.iterator ] () {
+        let index = 0;
+
+        while (true) {
+            const entities = store.get('entities').get(this);
+            const next = entites.get(index);
+
+            index++;
+
+            yield next;
+        }
+    }
+
     forEach (callback) {
         return store.get('entities').get(this).forEach(callback);
     }
@@ -25,11 +39,11 @@ export default class Entity {
         const serial = store.get('serial');
         const entity = new Number(serial);
 
-        for (const [ kind, payload ] of Object.entries(data)) {
+        for (const [ kind, options ] of Object.entries(data)) {
             const component = this.components.find(c => c.kind === kind);
 
             if (component) {
-                component.create(entity, payload);
+                component.create(entity, options);
             }
         }
 

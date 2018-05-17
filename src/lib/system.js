@@ -2,7 +2,7 @@ import store from './store';
 
 export default class System {
 
-    static get instances () {
+    static get __instances__ () {
         return store.get('systems');
     }
 
