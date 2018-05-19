@@ -1,10 +1,10 @@
-# Encosy
+# encosy
 Lightweight Entity/ Component/ System implementation in JavaScript
 
 ## Installation
 
 ```
-npm install @eclipse-games/encosy --save
+npm install cyclone-games/encosy --save
 ```
 
 ## Introduction
@@ -14,7 +14,7 @@ of inheritance when dealing with game entities.
 
 #### Entities
 Entities are essentially just a unique identifier that components can reference
-in order to, as a group, describe an object.
+in order to, as a group, describe an 'object'.
 
 #### Components
 Components are strictly data. They contain properties that systems can act upon.
@@ -35,25 +35,12 @@ new Component(Object<String, Function>)
 The `Component` class is used to define the data model for a component. The
 available types are as follows:
 
-- `any`
-- `array`
-- `boolean`
-- `map`
-- `number`
-- `object`
-- `proxy`
-- `set`
-- `string`
-- `symbol`
-- `weakmap`
-- `weakset`
-
 **Example** *(~/components/position.js)*
 
 ```javascript
-import { Component } from '@eclipse-games/encosy';
+import { Component } from 'encosy';
 
-export default new Component({
+export default new Component('position', {
     x: Component.types.number,
     y: Component.types.number
 });
@@ -84,14 +71,14 @@ creates a relationship between it and components.
 **Example** *(~/entities/character.js)*
 
 ```javascript
-import { Entity } from '@eclipse-games/encosy';
+import { Entity } from 'encosy';
 import position from '~/components/position';
 import sprite from '~/components/sprite';
 
-export default new Entity({
+export default new Entity('character', [
     position,
     sprite
-});
+]);
 ```
 Then, to create a character, you would do:
 
@@ -113,9 +100,9 @@ If you need to dynamically add components to an entity, you can `extend` it:
 import character from '~/entities/character';
 import health from '~/components/health';
 
-character.extend({
+character.extend([
     health
-});
+]);
 ```
 
 If you'd like to then delete a character, which would then also allow its
@@ -143,11 +130,11 @@ the world and a single entity.
 **Example** *(~/systems/render.js)*
 
 ```javascript
-import { System } from '@eclipse-games/encosy';
+import { System } from 'encosy';
 import position from '~/components/position';
 import sprite from '~/components/sprite';
 
-export default new System([ position, sprite ], entity => {
+export default new System('render', [ position, sprite ], entity => {
     const { x, y } = position.of(entity);
     const { data } = sprite.of(entity);
 
@@ -155,8 +142,8 @@ export default new System([ position, sprite ], entity => {
 });
 ```
 
-As you can see, to get a position of an entity, you would use the `of` method. 
-This works similarily by concept to reflection, though it's not totally the same 
+As you can see, to get a position of an entity, you would use the `of` method.
+This works similarly in concept to reflection, though it's not totally the same
 thing.
 
 Then, to run the render system, you would call its `run` method:

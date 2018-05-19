@@ -4,7 +4,6 @@
   "description": "Lightweight Entity/ Component/ System implementation in JavaScript",
   "main": "index.js",
   "scripts": {
-    "install": "cp -a src/. . && rm -rf src/",
     "test": "exit 0"
   },
   "repository": {
