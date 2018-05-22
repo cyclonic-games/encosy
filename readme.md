@@ -29,7 +29,7 @@ The API is very lightweight and simple to use
 ### `Component`
 
 ```javascript
-new Component(Object<String, Function>)
+new Component(String, Object<String, Function>)
 ```
 
 The `Component` class is used to define the data model for a component. The
@@ -41,8 +41,8 @@ available types are as follows:
 import { Component } from 'encosy';
 
 export default new Component('position', {
-    x: Component.types.number,
-    y: Component.types.number
+    x: Number,
+    y: Number
 });
 ```
 
@@ -52,7 +52,7 @@ If you need to dynamically add to a component's model, you may `extend` it:
 import position from '~/components/position';
 
 position.extend({
-    z: Component.types.number
+    z: Number
 });
 ```
 
@@ -61,7 +61,7 @@ position.extend({
 ### `Entity`
 
 ```javascript
-new Entity(Object<String, Component>)
+new Entity(String, Array<Component>)
 ```
 
 The `Entity` class is a factory that accepts a dictionary of an accessor string,
@@ -118,7 +118,7 @@ character.destroy(char)
 ### `System`
 
 ```javascript
-new System(Array<Component>, Function)
+new System(String, Array<Component>, Function)
 ```
 
 The `System` class is used to define the actual logic that brings the components
