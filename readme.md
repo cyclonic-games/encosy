@@ -1,32 +1,40 @@
-# encosy
+```
+     ______/           ______/            ______/
+    /                 /                  /
+   _____/   ____  /  /         ____  /  /_____   /      /
+  /        /     /  /         /     /        /  /      /
+_______/ _/    _/ ________/ _______/ _______/ ______  /
+                                                     /
+                                               _____/
+```
 Lightweight Entity/ Component/ System implementation in JavaScript
 
-## Installation
+### `// Installation`
 
 ```
 npm install cyclone-games/encosy --save
 ```
 
-## Introduction
+### `// Introduction`
 Entity/ Component/ System architectures are an alternative to OOP for game
 development. The main idea is to help prevent having massive hierarchal trees
 of inheritance when dealing with game entities.
 
-#### Entities
+##### Entities
 Entities are essentially just a unique identifier that components can reference
 in order to, as a group, describe an 'object'.
 
-#### Components
+##### Components
 Components are strictly data. They contain properties that systems can act upon.
 
-#### Systems
+##### Systems
 Systems are where your actual logic lives. They validate whether or not an
 entity contains all of the required components, and then acts accordingly.
 
-## Usage
+### `// Usage`
 The API is very lightweight and simple to use
 
-### `Component`
+#### `Component`
 
 ```javascript
 new Component(String, Object<String, Function>)
@@ -58,7 +66,7 @@ position.extend({
 
 --------------------------------------------------------------------------------
 
-### `Entity`
+#### `Entity`
 
 ```javascript
 new Entity(String, Array<Component>)
@@ -115,7 +123,7 @@ character.destroy(char)
 
 --------------------------------------------------------------------------------
 
-### `System`
+#### `System`
 
 ```javascript
 new System(String, Array<Component>, Function)
