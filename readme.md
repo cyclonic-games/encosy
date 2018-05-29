@@ -5,7 +5,7 @@
   /        /     /  /         /     /        /  /      /
 _______/ _/    _/ ________/ _______/ _______/ ______  /
                                                      /
-                                               _____/
+          (c) 2018 Cyclonic Games              _____/
 ```
 Lightweight Entity/ Component/ System implementation in JavaScript
 
