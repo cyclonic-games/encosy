@@ -1,3 +1,3 @@
-export Component from './lib/component';
-export Entity from './lib/entity';
-export System from './lib/system';
+exports.Component = require('./lib/component');
+exports.Entity = require('./lib/entity');
+exports.System = require('./lib/system');
